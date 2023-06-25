@@ -27,6 +27,18 @@ class FighterService {
     return fighterRepository.getAll();
   }
 
+  getFighterById(id) {
+    return fighterRepository.getAll().find((fighter) => fighter.id === id);
+  }
+
+  updateFighterById(id, data) {
+    return fighterRepository.update(id, data);
+  }
+
+  deleteFighterById(id) {
+    return fighterRepository.delete(id);
+  }
+
   findFigther(data) {
     return fighterRepository.getOne(data);
   }
@@ -35,6 +47,10 @@ class FighterService {
     return Boolean(
       fighterRepository.getAll().find((el) => el.name === data.name)
     );
+  }
+
+  doesFighterExistById(id) {
+    return Boolean(fighterRepository.getAll().find((el) => el.id === id));
   }
 }
 
