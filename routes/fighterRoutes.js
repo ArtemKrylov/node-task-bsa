@@ -15,7 +15,6 @@ router.get(
   (_, res, next) => {
     try {
       const data = fighterService.getAllFighters();
-      console.log("data: ", data);
       res.send(data);
     } catch (error) {
       res.err = error;
@@ -30,11 +29,77 @@ router.post(
   "",
   (req, res, next) => {
     try {
-      const data = req.body;
-      data.health = 100;
-      res.send(fighterService.createFighter(data));
+      const fighterData = req.body;
+      if (!fighterData.health) {
+        fighterData.health = 100;
+      }
+      if (fighterService.doesFighterExist(fighterData)) {
+        updateFighterValid(req, res, next);
+      } else {
+        createFighterValid(req, res, next);
+      }
     } catch (error) {
       res.err = error;
+    } finally {
+      next();
+    }
+  },
+  responseMiddleware
+);
+
+router.get(
+  "/:id",
+  (req, res, next) => {
+    try {
+      const id = req.params.id;
+      if (fighterService.doesFighterExistById(id)) {
+        const data = fighterService.getFighterById(id);
+        res.send(data);
+      } else {
+        throw new Error("Fighter with such id does not exist!");
+      }
+    } catch (error) {
+      res.status(404).send(error.message);
+    } finally {
+      next();
+    }
+  },
+  responseMiddleware
+);
+
+router.put(
+  "/:id",
+  (req, res, next) => {
+    try {
+      const id = req.params.id;
+      const data = req.body;
+      if (fighterService.doesFighterExistById(id)) {
+        res.send(fighterService.updateFighterById(id, data));
+      } else {
+        throw new Error("Fighter with such id does not exist!");
+      }
+    } catch (error) {
+      res.status(404).send(error.message);
+    } finally {
+      next();
+    }
+  },
+  responseMiddleware
+);
+
+router.delete(
+  "/:id",
+  (req, res, next) => {
+    try {
+      const id = req.params.id;
+      if (fighterService.doesFighterExistById(id)) {
+        const data = fighterService.deleteFighterById(id);
+        res.send(data);
+      } else {
+        throw new Error("Fighter with such id does not exist!");
+      }
+    } catch (error) {
+      res.status(404).send(error.message);
     } finally {
       next();
     }
