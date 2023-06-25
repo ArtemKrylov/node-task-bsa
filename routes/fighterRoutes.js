@@ -31,6 +31,7 @@ router.post(
   (req, res, next) => {
     try {
       const data = req.body;
+      data.health = 100;
       res.send(fighterService.createFighter(data));
     } catch (error) {
       res.err = error;
