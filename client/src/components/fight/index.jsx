@@ -126,7 +126,7 @@ class Fight extends React.Component {
     const arenaRoot = document.querySelector(".arena___root");
     arenaRoot.appendChild(winnerEl);
     const response = await currentFight.json();
-    await fetch(`/api/fights/:${response.id}`, {
+    await fetch(`/api/fights/${response.id}`, {
       method: "POST",
       body: JSON.stringify(winner),
       headers: {
