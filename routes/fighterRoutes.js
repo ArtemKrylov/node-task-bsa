@@ -15,7 +15,7 @@ router.get(
   (_, res, next) => {
     try {
       const data = fighterService.getAllFighters();
-      console.log("data: ", data);
+      // console.log("data: ", data);
       res.send(data);
     } catch (error) {
       res.err = error;
@@ -30,9 +30,21 @@ router.post(
   "",
   (req, res, next) => {
     try {
-      const data = req.body;
-      data.health = 100;
-      res.send(fighterService.createFighter(data));
+      const fighterData = req.body;
+      if (!fighterData.health) {
+        fighterData.health = 100;
+      }
+      console.log(
+        "doesFighterExist: ",
+        fighterService.doesFighterExist(fighterData)
+      );
+      if (fighterService.doesFighterExist(fighterData)) {
+        updateFighterValid(req, res, next);
+      } else {
+        createFighterValid(req, res, next);
+      }
+
+      // res.send(fighterService.createFighter(fighterData));
     } catch (error) {
       res.err = error;
     } finally {

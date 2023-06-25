@@ -13,9 +13,12 @@ router.post(
   "",
   (req, res, next) => {
     try {
-      const data = req.body;
-      res.data = data;
-      res.send(data);
+      const user = req.body;
+      if (userService.doesUserExist(user)) {
+        updateUserValid(req, res, next);
+      } else {
+        createUserValid(req, res, next);
+      }
     } catch (error) {
       res.err = error;
     } finally {
